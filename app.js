@@ -6,8 +6,6 @@ const path = require('path');
 const targetPath = "/Users/Teerasej/Desktop/Xamarin 3/Web API - POST";
 const enableRemove = true;
 
-
-
 let startSearch = (rootPath, internalDir) => {
 
   let dir = path.join(rootPath, internalDir);
@@ -25,16 +23,19 @@ let startSearch = (rootPath, internalDir) => {
       startRemoveThisDir = true;
     } else if (dir == 'bin') {
       startRemoveThisDir = true;
-    } else if (dir == 'packages'){
+    } else if (dir == 'packages') {
       startRemoveThisDir = true;
     }
 
     if (startRemoveThisDir) {
       let removingDir = path.join(rootPath, dir);
       console.log('Removing:', removingDir);
-      deleteFolderRecursive(removingDir);
+
+      if (enableRemove) {
+        deleteFolderRecursive(removingDir);
+      }
     } else {
-      startSearch(path.join(rootPath, dir),"");
+      startSearch(path.join(rootPath, dir), "");
     }
   }, this);
 
