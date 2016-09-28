@@ -5,29 +5,35 @@ const path = require('path');
 const readline = require('readline');
 
 
-const enableRemove = false;
+// const rl = readline.createInterface({
+//   input: process.stdin,
+//   output: process.stdout
+// });
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
+// rl.question('Enter path you want to remove "obj", "bin", and "packages"... \r\n', (answer) => {
 
-rl.question('Enter path you want to remove "obj", "bin", and "packages"... ', (answer) => {
+//   if (answer == "q" || answer == "exit") {
+//     console.log("Good bye :)");
+//     rl.close();
+//   } else {
 
-  if (answer == "q" || answer == "exit") {
-    console.log("Good bye :)");
-    rl.close();
-  } else {
+//     let rootPath = answer;
+//     console.log("Start searching on:", rootPath);
 
-    let rootPath = answer;
-    console.log("Start searching on:", rootPath);
-    startSearch(rootPath, "");
-  }
+//     if( answer.indexOf("--d") > -1){
+//       console.log("Delete mode ON: Going to delete directory that matched.");
+//       startSearch(rootPath, "", true);
+//     } else {
+//       console.log("View mode only, use '--d' for enable deletion");
+//       startSearch(rootPath, "", false);
+//     }
 
-});
+//   }
+
+// });
 
 
-let startSearch = (rootPath, internalDir) => {
+let startSearch = (rootPath, internalDir, deleteRequest) => {
 
   let dir = path.join(rootPath, internalDir);
 
@@ -52,11 +58,11 @@ let startSearch = (rootPath, internalDir) => {
       let removingDir = path.join(rootPath, dir);
       console.log('Removing:', removingDir);
 
-      if (enableRemove) {
+      if (deleteRequest) {
         deleteFolderRecursive(removingDir);
       }
     } else {
-      startSearch(path.join(rootPath, dir), "");
+      startSearch(path.join(rootPath, dir), "", deleteRequest);
     }
   }, this);
 
@@ -76,3 +82,20 @@ let deleteFolderRecursive = function (path) {
   }
 };
 
+
+
+let args = process.argv.slice(2);
+// console.dir(args);
+let rootPath = args[0];
+console.log("Start searching on:", rootPath);
+
+if (args.length == 1) {
+  startSearch(rootPath, "", false);
+  console.log("NOTE: View mode only, use '--d' for enable deletion");
+} else {
+  if (args[1] == "--d") {
+    
+    startSearch(rootPath, "", true);
+    console.log("NOTE: Delete mode ON, all listed directories removed.");
+  }
+} 
