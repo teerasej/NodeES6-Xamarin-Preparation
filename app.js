@@ -2,9 +2,30 @@
 
 const fs = require('fs');
 const path = require('path');
+const readline = require('readline');
 
-const targetPath = "/Users/Teerasej/Desktop/Xamarin 3/Web API - POST";
-const enableRemove = true;
+
+const enableRemove = false;
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+rl.question('Enter path you want to remove "obj", "bin", and "packages"... ', (answer) => {
+
+  if (answer == "q" || answer == "exit") {
+    console.log("Good bye :)");
+    rl.close();
+  } else {
+
+    let rootPath = answer;
+    console.log("Start searching on:", rootPath);
+    startSearch(rootPath, "");
+  }
+
+});
+
 
 let startSearch = (rootPath, internalDir) => {
 
@@ -55,5 +76,3 @@ let deleteFolderRecursive = function (path) {
   }
 };
 
-
-startSearch(targetPath, "");
